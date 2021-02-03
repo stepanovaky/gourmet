@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { CSVLink } from "react-csv";
+// import { CSVLink } from "react-csv";
 import { Button, Card, DataTable, Filters } from "@shopify/polaris";
 import { format } from "date-fns";
 
@@ -68,9 +68,9 @@ function FilterOwner(props) {
   return (
     <div style={{ height: "568px" }}>
       {" "}
-      <CSVLink data={csvData}>
+      {/* <CSVLink data={csvData}>
         <Button>Download CSV</Button>
-      </CSVLink>
+      </CSVLink> */}
       <Card>
         {" "}
         <Card.Section>

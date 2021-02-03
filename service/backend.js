@@ -1,1 +1,1 @@
-export const graphQL = "https://gourmeteasy.ga/graphql";
+export const graphQL = "https://gourmet-b.herokuapp.com/graphql";
