@@ -13,9 +13,9 @@ function Index(props) {
     console.log(email);
     setActive(!active), [active];
     if (active === false) {
-      const item = props.results.filter((item) => item.ownerEmail === email);
+      const item = props?.results.filter((item) => item.ownerEmail === email);
       setActiveOwner(item);
-      const i = item.map((i) => {
+      const i = item?.map((i) => {
         return [
           i.productName,
           format(new Date(parseInt(i.warrantyStart)), "MM/dd/yyyy"),

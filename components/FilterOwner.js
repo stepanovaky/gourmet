@@ -25,7 +25,7 @@ function FilterOwner(props) {
     setQueryValue(null), [];
   });
 
-  const rows = filter.map((item) => {
+  const rows = filter?.map((item) => {
     return [
       <span onClick={() => props.handleChange(item.ownerEmail)}>
         <strong>{item.ownerName}</strong>
@@ -51,14 +51,14 @@ function FilterOwner(props) {
     return arr;
   };
 
-  bubbleSort(tableRows);
+  (tableRows ? bubbleSort(tableRows):null);
 
   const csvData = [["Customer", "Email", "Product", "Expiration", "Origin"]];
 
-  tableRows.map((item) => {
+  tableRows?.map((item) => {
     csvData.push([
       item.ownerName,
-      item.ownerEmail,
+      item.ownerEmail, 
       item.productName,
       format(new Date(parseInt(item.warrantyExp)), "MM/dd/yyyy"),
       item.origin,
@@ -92,7 +92,7 @@ function FilterOwner(props) {
             "Warranty Expiration",
             "Origin",
           ]}
-          rows={rows}
+          rows={rows?rows:[]}
         />
       </Card>{" "}
     </div>
