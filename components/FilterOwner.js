@@ -51,7 +51,7 @@ function FilterOwner(props) {
     return arr;
   };
 
-  bubbleSort(tableRows);
+  (tableRows ? bubbleSort(tableRows):null);
 
   const csvData = [["Customer", "Email", "Product", "Expiration", "Origin"]];
 
