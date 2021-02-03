@@ -42,7 +42,7 @@ function Products(props) {
     }
   };
 
-  const productsWithoutWarranties = products.map((item) => {
+  const productsWithoutWarranties = products?.map((item) => {
     if (item.warrantyDuration === 0) {
       return <List.Item key={item.productId}>{item.productName}</List.Item>;
     }
