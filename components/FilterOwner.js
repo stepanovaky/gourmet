@@ -92,7 +92,7 @@ function FilterOwner(props) {
             "Warranty Expiration",
             "Origin",
           ]}
-          rows={rows}
+          rows={rows?rows:[]}
         />
       </Card>{" "}
     </div>
