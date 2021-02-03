@@ -100,7 +100,7 @@ function Products(props) {
 }
 
 export const getStaticProps = async () => {
-  const res = await fetch(`https://gourmeteasy.ga/graphql`, {
+  const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
