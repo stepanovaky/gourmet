@@ -25,7 +25,7 @@ function FilterOwner(props) {
     setQueryValue(null), [];
   });
 
-  const rows = filter.map((item) => {
+  const rows = filter?.map((item) => {
     return [
       <span onClick={() => props.handleChange(item.ownerEmail)}>
         <strong>{item.ownerName}</strong>
@@ -55,7 +55,7 @@ function FilterOwner(props) {
 
   const csvData = [["Customer", "Email", "Product", "Expiration", "Origin"]];
 
-  tableRows.map((item) => {
+  tableRows?.map((item) => {
     csvData.push([
       item.ownerName,
       item.ownerEmail,
