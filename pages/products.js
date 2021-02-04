@@ -110,6 +110,7 @@ export const getStaticProps = async () => {
     }),
   });
   const response = await res.json();
+  console.log(response);
   // console.log(response.data.allProducts);
   return { props: { results: response.data.allProducts } };
 };
