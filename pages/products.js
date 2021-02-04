@@ -21,15 +21,10 @@ function Products(props) {
     console.log(value), setSelected(value), [];
   });
 
-  console.log(selected);
-  console.log(products);
-
   const options = [{ label: "Choose Product", value: "" }];
   products?.map((item) => {
     options.push({ label: `${item.productName}`, value: `${item.productId}` });
   });
-
-  console.log(options);
 
   useEffect(() => {
     loadProps();
