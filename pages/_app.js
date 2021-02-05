@@ -57,6 +57,10 @@ class MyApp extends App {
               url: "/products",
               label: "Products",
             },
+            {
+              url: "/amazonwarranties",
+              label: "Check Amazon Warranties",
+            },
           ]}
         />
       </Navigation>

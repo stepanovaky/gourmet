@@ -13,7 +13,7 @@
     "url": "git+https://github.com/Shopify/shopify-app-node.git"
   },
   "author": "Shopify Inc.",
-  "license": "MIT", 
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/shopify/shopify-app-node/issues"
   },

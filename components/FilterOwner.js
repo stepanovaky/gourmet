@@ -1,12 +1,27 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 // import { CSVLink } from "react-csv";
 import { Button, Card, DataTable, Filters } from "@shopify/polaris";
 import { format } from "date-fns";
 
 function FilterOwner(props) {
   const [queryValue, setQueryValue] = useState(null);
-  const [tableRows, setTableRows] = useState(props.results);
-  const [filter, setFilter] = useState(props.results);
+  const [tableRows, setTableRows] = useState([]);
+  const [filter, setFilter] = useState([]);
+
+  const filterOutPending = (items) => {
+    const filtered = items.map((item) => {
+      if (item.approval === "approved") {
+        return item;
+      }
+    });
+
+    setTableRows(filtered);
+    setFilter(filtered);
+  };
+
+  useEffect(() => {
+    filterOutPending(props?.results);
+  }, [props?.results]);
 
   const handleFiltersQueryChange = useCallback((value) => {
     const list = [];
@@ -21,7 +36,7 @@ function FilterOwner(props) {
   });
 
   const handleQueryValueRemove = useCallback(() => {
-    setTableRows(props.results);
+    filterOutPending(props.results);
     setQueryValue(null), [];
   });
 
@@ -51,14 +66,14 @@ function FilterOwner(props) {
     return arr;
   };
 
-  (tableRows ? bubbleSort(tableRows):null);
+  tableRows ? bubbleSort(tableRows) : null;
 
   const csvData = [["Customer", "Email", "Product", "Expiration", "Origin"]];
 
   tableRows?.map((item) => {
     csvData.push([
       item.ownerName,
-      item.ownerEmail, 
+      item.ownerEmail,
       item.productName,
       format(new Date(parseInt(item.warrantyExp)), "MM/dd/yyyy"),
       item.origin,
@@ -92,7 +107,7 @@ function FilterOwner(props) {
             "Warranty Expiration",
             "Origin",
           ]}
-          rows={rows?rows:[]}
+          rows={rows ? rows : []}
         />
       </Card>{" "}
     </div>
