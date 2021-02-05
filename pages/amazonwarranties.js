@@ -6,6 +6,7 @@ import { format } from "date-fns";
 //table logic - if approval === pending, include in this table
 
 function AmazonWarranties(props) {
+  console.log(props);
   const [tableRows, setTableRows] = useState([]);
   const [approved, setApproved] = useState([]);
   const [remove, setRemove] = useState([]);
@@ -80,6 +81,7 @@ function AmazonWarranties(props) {
 export default AmazonWarranties;
 
 export const getStaticProps = async () => {
+  console.log("request sent");
   const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
     method: "POST",
     headers: {

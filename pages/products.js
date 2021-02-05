@@ -12,6 +12,7 @@ import {
 import fetchClass from "../service/fetchClass-service";
 
 function Products(props) {
+  console.log(props);
   const [products, setProducts] = useState([]);
   const [selected, setSelected] = useState();
   const [warranty, setWarranty] = useState("");
@@ -95,6 +96,7 @@ function Products(props) {
 }
 
 export const getStaticProps = async () => {
+  console.log("request sent");
   const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
     method: "POST",
     headers: {
