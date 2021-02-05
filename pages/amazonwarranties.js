@@ -88,7 +88,7 @@ export const getStaticProps = async () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      query: `query {allWarranties{productId productName warrantyExp warrantyStart ownerEmail ownerName origin}}`,
+      query: `query {allWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin}}`,
     }),
   });
   const response = await res.json();
