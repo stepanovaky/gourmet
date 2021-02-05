@@ -42,13 +42,13 @@ function FilterOwner(props) {
 
   const rows = filter?.map((item) => {
     return [
-      <span onClick={() => props.handleChange(item.ownerEmail)}>
-        <strong>{item.ownerName}</strong>
+      <span onClick={() => props.handleChange(item?.ownerEmail)}>
+        <strong>{item?.ownerName}</strong>
       </span>,
-      item.ownerEmail,
-      item.productName,
-      format(new Date(parseInt(item.warrantyExp)), "MM/dd/yyyy"),
-      item.origin === "shopify" ? "Shopify" : item.origin,
+      item?.ownerEmail,
+      item?.productName,
+      format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
+      item?.origin === "shopify" ? "Shopify" : item?.origin,
     ];
   });
 

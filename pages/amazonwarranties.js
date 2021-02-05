@@ -8,8 +8,6 @@ import { format } from "date-fns";
 function AmazonWarranties(props) {
   console.log(props);
   const [tableRows, setTableRows] = useState([]);
-  const [approved, setApproved] = useState([]);
-  const [remove, setRemove] = useState([]);
 
   const handleApprove = (exp, id) => {
     //send code to approve this warraNTY
