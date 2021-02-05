@@ -7,6 +7,7 @@ function FilterOwner(props) {
   const [queryValue, setQueryValue] = useState(null);
   const [tableRows, setTableRows] = useState([]);
   const [filter, setFilter] = useState([]);
+  const [rows, setRows] = useState([]);
 
   const filterOutPending = (items) => {
     const filtered = items.map((item) => {
@@ -40,17 +41,20 @@ function FilterOwner(props) {
     setQueryValue(null), [];
   });
 
-  const rows = filter?.map((item) => {
-    return [
-      <span onClick={() => props.handleChange(item?.ownerEmail)}>
-        <strong>{item?.ownerName}</strong>
-      </span>,
-      item?.ownerEmail,
-      item?.productName,
-      format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
-      item?.origin === "shopify" ? "Shopify" : item?.origin,
-    ];
-  });
+  if (filter !== []) {
+    const rows = filter?.map((item) => {
+      return [
+        <span onClick={() => props.handleChange(item?.ownerEmail)}>
+          <strong>{item?.ownerName}</strong>
+        </span>,
+        item?.ownerEmail,
+        item?.productName,
+        format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
+        item?.origin === "shopify" ? "Shopify" : item?.origin,
+      ];
+    });
+    setRows(rows);
+  }
 
   const bubbleSort = (arr) => {
     let temp;

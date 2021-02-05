@@ -25,6 +25,7 @@ function AmazonWarranties(props) {
     });
 
     const filtered = filteredItems;
+    console.log(filtered);
 
     setTableRows([filtered]);
   };
