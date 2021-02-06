@@ -7,17 +7,18 @@ function FilterOwner(props) {
   const [queryValue, setQueryValue] = useState(null);
   const [tableRows, setTableRows] = useState([]);
   const [filter, setFilter] = useState([]);
-  const [rows, setRows] = useState([]);
 
   const filterOutPending = (items) => {
-    const filtered = items.map((item) => {
-      if (item.approval === "approved") {
-        return item;
-      }
-    });
+    if (items) {
+      const filtered = items.map((item) => {
+        if (item.approval === "approved") {
+          return item;
+        }
+      });
 
-    setTableRows(filtered);
-    setFilter(filtered);
+      setTableRows(filtered);
+      setFilter(filtered);
+    }
   };
 
   useEffect(() => {
@@ -41,8 +42,8 @@ function FilterOwner(props) {
     setQueryValue(null), [];
   });
 
-  if (filter !== []) {
-    const rows = filter?.map((item) => {
+  const rows = filter?.map((item) => {
+    if (item !== undefined) {
       return [
         <span onClick={() => props.handleChange(item?.ownerEmail)}>
           <strong>{item?.ownerName}</strong>
@@ -52,9 +53,10 @@ function FilterOwner(props) {
         format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
         item?.origin === "shopify" ? "Shopify" : item?.origin,
       ];
-    });
-    setRows(rows);
-  }
+    }
+  });
+
+  console.log(rows);
 
   const bubbleSort = (arr) => {
     let temp;
@@ -75,13 +77,15 @@ function FilterOwner(props) {
   const csvData = [["Customer", "Email", "Product", "Expiration", "Origin"]];
 
   tableRows?.map((item) => {
-    csvData.push([
-      item.ownerName,
-      item.ownerEmail,
-      item.productName,
-      format(new Date(parseInt(item.warrantyExp)), "MM/dd/yyyy"),
-      item.origin,
-    ]);
+    if (item !== undefined) {
+      csvData.push([
+        item.ownerName,
+        item.ownerEmail,
+        item.productName,
+        format(new Date(parseInt(item.warrantyExp)), "MM/dd/yyyy"),
+        item.origin,
+      ]);
+    }
   });
 
   return (
@@ -111,7 +115,7 @@ function FilterOwner(props) {
             "Warranty Expiration",
             "Origin",
           ]}
-          rows={rows ? rows : []}
+          rows={rows[0] ? rows : []}
         />
       </Card>{" "}
     </div>

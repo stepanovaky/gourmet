@@ -19,6 +19,7 @@ function AmazonWarranties(props) {
 
   const filterOutApproved = (items) => {
     const filteredItems = items.map((item) => {
+      console.log(item);
       if (item.approval === "pending") {
         return item;
       }
@@ -30,33 +31,40 @@ function AmazonWarranties(props) {
     setTableRows([filtered]);
   };
 
+  console.log(tableRows);
+
   useEffect(() => {
     filterOutApproved(props?.results);
-  }, [props?.results]);
+  }, []);
 
-  const rows = tableRows.map((item) => {
-    return [
-      item.ownerName,
-      item.ownerEmail,
-      item.productName,
-      //   format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
-      item.amazonOrderId,
-      <ButtonGroup>
-        <Button
-          destructive
-          onClick={handleRemove(item.warrantyExp, item.productId)}
-        >
-          Remove
-        </Button>
-        <Button
-          primary
-          onClick={handleApprove(item.warrantyExp, item.productId)}
-        >
-          Approve
-        </Button>
-      </ButtonGroup>,
-    ];
+  const rows = tableRows?.map((item) => {
+    if (item !== undefined) {
+      console.log(item);
+      return [
+        item.ownerName,
+        item.ownerEmail,
+        item.productName,
+        //   format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
+        item.amazonOrderId,
+        <ButtonGroup>
+          <Button
+            destructive
+            onClick={handleRemove(item.warrantyExp, item.productId)}
+          >
+            Remove
+          </Button>
+          <Button
+            primary
+            onClick={handleApprove(item.warrantyExp, item.productId)}
+          >
+            Approve
+          </Button>
+        </ButtonGroup>,
+      ];
+    }
   });
+
+  console.log(rows);
 
   return (
     <Page title="Unapproved Amazon Warranties">
@@ -87,7 +95,7 @@ export const getStaticProps = async () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      query: `query {allWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin}}`,
+      query: `query {allWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin amazonOrderId}}`,
     }),
   });
   const response = await res.json();
