@@ -56,8 +56,6 @@ function FilterOwner(props) {
     }
   });
 
-  console.log(rows, "test");
-
   const bubbleSort = (arr) => {
     let temp;
     for (let i = arr.length - 1; i > 0; i--) {
