@@ -9,7 +9,7 @@ function AmazonWarranties(props) {
   console.log(props, "test1");
   const [tableRows, setTableRows] = useState([]);
 
-  const handleApprove = (exp, id) => {
+  const handleApprove = async (exp, id) => {
     //send code to approve this warraNTY
     const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
       method: "POST",
@@ -22,7 +22,7 @@ function AmazonWarranties(props) {
     });
   };
 
-  const handleRemove = (exp, id) => {
+  const handleRemove = async (exp, id) => {
     //send code to delete this warranty
      const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
     method: "POST",
