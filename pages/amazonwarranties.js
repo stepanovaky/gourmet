@@ -20,6 +20,7 @@ function AmazonWarranties(props) {
         query: `mutation {addWarrantyApproval (productId: ${id}, warrantyExp: ${exp}){ productId }}`,
       }),
     });
+    console.log(res);
   };
 
   const handleRemove = async (exp, id) => {
@@ -33,6 +34,7 @@ function AmazonWarranties(props) {
       query: `mutation {warrantyDenied (productId: ${id}, warrantyExp: ${exp}){ productId }}`,
     }),
   });
+  console.log(res)
   };
 
   const filterOutApproved = (items) => {
