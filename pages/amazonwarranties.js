@@ -6,65 +6,95 @@ import { format } from "date-fns";
 //table logic - if approval === pending, include in this table
 
 function AmazonWarranties(props) {
-  console.log(props);
+  console.log(props, "test1");
   const [tableRows, setTableRows] = useState([]);
 
   const handleApprove = (exp, id) => {
     //send code to approve this warraNTY
+    const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `mutation {addWarrantyApproval (productId: ${id}, warrantyExp: ${exp}){ productId }}`,
+      }),
+    });
   };
 
   const handleRemove = (exp, id) => {
     //send code to delete this warranty
+     const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `mutation {warrantyDenied (productId: ${id}, warrantyExp: ${exp}){ productId }}`,
+    }),
+  });
   };
 
   const filterOutApproved = (items) => {
-    const filteredItems = items.map((item) => {
-      console.log(item);
+    let filteredItems = [];
+    items.map((item) => {
       if (item.approval === "pending") {
-        return item;
+        filteredItems.push([
+          item.ownerName,
+          item.ownerEmail,
+          item.productName,
+          //   format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
+          item.amazonOrderId,
+          <ButtonGroup>
+            <Button
+              destructive
+              onClick={handleRemove(item.warrantyExp, item.productId)}
+            >
+              Remove
+            </Button>
+            <Button
+              primary
+              onClick={handleApprove(item.warrantyExp, item.productId)}
+            >
+              Approve
+            </Button>
+          </ButtonGroup>,
+        ]);
       }
     });
-
     const filtered = filteredItems;
-    console.log(filtered);
-
-    setTableRows([filtered]);
+    setTableRows(filtered);
   };
 
-  console.log(tableRows);
-
   useEffect(() => {
-    filterOutApproved(props?.results);
+    filterOutApproved(props.results);
   }, []);
 
-  const rows = tableRows?.map((item) => {
-    if (item !== undefined) {
-      console.log(item);
-      return [
-        item.ownerName,
-        item.ownerEmail,
-        item.productName,
-        //   format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
-        item.amazonOrderId,
-        <ButtonGroup>
-          <Button
-            destructive
-            onClick={handleRemove(item.warrantyExp, item.productId)}
-          >
-            Remove
-          </Button>
-          <Button
-            primary
-            onClick={handleApprove(item.warrantyExp, item.productId)}
-          >
-            Approve
-          </Button>
-        </ButtonGroup>,
-      ];
-    }
-  });
-
-  console.log(rows);
+  // let rows = tableRows?.map((item) => {
+  //   if (item !== undefined) {
+  //     return [
+  //       item.ownerName,
+  //       item.ownerEmail,
+  //       item.productName,
+  //       //   format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
+  //       item.amazonOrderId,
+  //       <ButtonGroup>
+  //         <Button
+  //           destructive
+  //           onClick={handleRemove(item.warrantyExp, item.productId)}
+  //         >
+  //           Remove
+  //         </Button>
+  //         <Button
+  //           primary
+  //           onClick={handleApprove(item.warrantyExp, item.productId)}
+  //         >
+  //           Approve
+  //         </Button>
+  //       </ButtonGroup>,
+  //     ];
+  //   }
+  // });
 
   return (
     <Page title="Unapproved Amazon Warranties">
@@ -78,7 +108,7 @@ function AmazonWarranties(props) {
             "Amazon Order ID",
             "Approve?",
           ]}
-          rows={rows ? rows : []}
+          rows={tableRows ? tableRows : []}
         />
       </Card>
     </Page>

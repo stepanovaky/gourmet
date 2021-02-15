@@ -56,16 +56,23 @@ function FilterOwner(props) {
     }
   });
 
-  console.log(rows);
-
   const bubbleSort = (arr) => {
     let temp;
     for (let i = arr.length - 1; i > 0; i--) {
       for (let j = 0; j < i; j++) {
+<<<<<<< HEAD
         if (arr[j].warrantyStart < arr[j + 1]?.warrantyStart) {
           temp = arr[j];
           arr[j] = arr[j + 1];
           arr[j + 1] = temp;
+=======
+        if (arr[j] && arr[j + 1]) {
+          if (arr[j].warrantyStart < arr[j + 1].warrantyStart) {
+            temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
+          }
+>>>>>>> 1144b86ba7f4487f4115b6bc4a4f5edbdde024ea
         }
       }
     }
@@ -76,17 +83,19 @@ function FilterOwner(props) {
 
   const csvData = [["Customer", "Email", "Product", "Expiration", "Origin"]];
 
-  tableRows?.map((item) => {
-    if (item !== undefined) {
-      csvData.push([
-        item.ownerName,
-        item.ownerEmail,
-        item.productName,
-        format(new Date(parseInt(item.warrantyExp)), "MM/dd/yyyy"),
-        item.origin,
-      ]);
-    }
-  });
+  if (tableRows) {
+    tableRows?.map((item) => {
+      if (item !== undefined) {
+        csvData.push([
+          item.ownerName,
+          item.ownerEmail,
+          item.productName,
+          format(new Date(parseInt(item.warrantyExp)), "MM/dd/yyyy"),
+          item.origin,
+        ]);
+      }
+    });
+  }
 
   return (
     <div style={{ height: "568px" }}>
@@ -115,7 +124,15 @@ function FilterOwner(props) {
             "Warranty Expiration",
             "Origin",
           ]}
-          rows={rows[0] ? rows : []}
+          rows={
+            rows && rows[0]
+              ? rows.filter((item) => {
+                  if (item !== undefined) {
+                    return item;
+                  }
+                })
+              : []
+          }
         />
       </Card>{" "}
     </div>

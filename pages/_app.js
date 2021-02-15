@@ -22,7 +22,7 @@ const theme = {
 };
 
 const client = new ApolloClient({
-  uri: "http://localhost:8000/graphql",
+  uri: "http://gourmet-b.herokuapp.com/graphql",
   fetch: fetch,
   fetchOptions: {
     credentials: "include",
@@ -75,7 +75,7 @@ class MyApp extends App {
 
     // console.log(this.props);
     const { Component, pageProps } = this.props;
-    const shopOrigin = "muscled-store.myshopify.com";
+    const shopOrigin = "gourmeteasy.myshopify.com";
     return (
       <AppProvider i18n={translations}>
         <Provider
