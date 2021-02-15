@@ -60,19 +60,14 @@ function FilterOwner(props) {
     let temp;
     for (let i = arr.length - 1; i > 0; i--) {
       for (let j = 0; j < i; j++) {
-<<<<<<< HEAD
-        if (arr[j].warrantyStart < arr[j + 1]?.warrantyStart) {
-          temp = arr[j];
-          arr[j] = arr[j + 1];
-          arr[j + 1] = temp;
-=======
+
         if (arr[j] && arr[j + 1]) {
           if (arr[j].warrantyStart < arr[j + 1].warrantyStart) {
             temp = arr[j];
             arr[j] = arr[j + 1];
             arr[j + 1] = temp;
           }
->>>>>>> 1144b86ba7f4487f4115b6bc4a4f5edbdde024ea
+
         }
       }
     }
