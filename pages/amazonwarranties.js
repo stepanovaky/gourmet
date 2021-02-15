@@ -50,13 +50,13 @@ function AmazonWarranties(props) {
           <ButtonGroup>
             <Button
               destructive
-              onClick={handleRemove(item.warrantyExp, item.productId)}
+              onClick={() => handleRemove(item.warrantyExp, item.productId)}
             >
               Remove
             </Button>
             <Button
               primary
-              onClick={handleApprove(item.warrantyExp, item.productId)}
+              onClick={() => handleApprove(item.warrantyExp, item.productId)}
             >
               Approve
             </Button>
