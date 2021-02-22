@@ -13,54 +13,65 @@ function AmazonWarranties() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "cache-control": "no-cache",
-        pragma: "no-cache",
       },
       body: JSON.stringify({
         query: `query {allWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin amazonOrderId}}`,
       }),
     });
     const response = await res.json();
-    return { props: { results: response.data.allWarranties } };
+    return { results: response.data.allWarranties };
   };
 
   const filterOutApproved = (items) => {
-    let filteredItems = [];
-    items.map((item) => {
-      if (item.approval === "pending") {
-        filteredItems.push([
-          item.ownerName,
-          item.ownerEmail,
-          item.productName,
-          //   format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
-          item.amazonOrderId,
-          <ButtonGroup>
-            <Button
-              destructive
-              onClick={() =>
-                handleRemove(item.ownerEmail, item.productId, item.productName)
-              }
-            >
-              Remove
-            </Button>
-            <Button
-              primary
-              onClick={() =>
-                handleApprove(item.ownerEmail, item.productId, item.productName)
-              }
-            >
-              Approve
-            </Button>
-          </ButtonGroup>,
-        ]);
-      }
-    });
-    setTableRows(filteredItems);
+    if (items) {
+      let filteredItems = [];
+      items.map((item) => {
+        if (item.approval === "pending") {
+          filteredItems.push([
+            item.ownerName,
+            item.ownerEmail,
+            item.productName,
+            //   format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
+            item.amazonOrderId,
+            <ButtonGroup>
+              <Button
+                destructive
+                onClick={() =>
+                  handleRemove(
+                    item.ownerEmail,
+                    item.productId,
+                    item.productName
+                  )
+                }
+              >
+                Remove
+              </Button>
+              <Button
+                primary
+                onClick={() =>
+                  handleApprove(
+                    item.ownerEmail,
+                    item.productId,
+                    item.productName
+                  )
+                }
+              >
+                Approve
+              </Button>
+            </ButtonGroup>,
+          ]);
+        }
+      });
+      setTableRows(filteredItems);
+    }
   };
 
-  useEffect(async () => {
-    const data = await fetchData();
-    filterOutApproved(data.results);
+  useEffect(() => {
+    async function fetchDataWrap() {
+      let data = await fetchData();
+      filterOutApproved(data.results);
+    }
+    fetchDataWrap();
   }, []);
 
   const handleApprove = async (email, id, name) => {
@@ -76,7 +87,7 @@ function AmazonWarranties() {
     });
     const response = await res.json();
     if (response.data) {
-      const data = await fetchData();
+      let data = await fetchData();
       filterOutApproved(data.results);
     }
   };
@@ -94,7 +105,7 @@ function AmazonWarranties() {
     });
     const response = await res.json();
     if (response.data) {
-      const data = await fetchData();
+      let data = await fetchData();
       filterOutApproved(data.results);
       //staqlab-tunnel 8081
     }
