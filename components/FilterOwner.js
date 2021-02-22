@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
-// import { CSVLink } from "react-csv";
-import { Button, Card, DataTable, Filters } from "@shopify/polaris";
+import { CSVLink } from "react-csv";
+import { Button, Card, DataTable, Filters, Link } from "@shopify/polaris";
 import { format } from "date-fns";
 
 function FilterOwner(props) {
@@ -46,12 +46,12 @@ function FilterOwner(props) {
     if (item !== undefined) {
       return [
         <span onClick={() => props.handleChange(item?.ownerEmail)}>
-          <strong>{item?.ownerName}</strong>
+          <Link href="javascript:void(0)">{item?.ownerName}</Link>
         </span>,
         item?.ownerEmail,
         item?.productName,
-        format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
-        item?.origin === "shopify" ? "Shopify" : item?.origin,
+        format(new Date(item?.warrantyExp), "MM/dd/yyyy"),
+        item?.origin.toLowerCase() === "shopify" ? "Shopify" : item?.origin,
       ];
     }
   });
@@ -60,14 +60,12 @@ function FilterOwner(props) {
     let temp;
     for (let i = arr.length - 1; i > 0; i--) {
       for (let j = 0; j < i; j++) {
-
         if (arr[j] && arr[j + 1]) {
           if (arr[j].warrantyStart < arr[j + 1].warrantyStart) {
             temp = arr[j];
             arr[j] = arr[j + 1];
             arr[j + 1] = temp;
           }
-
         }
       }
     }
@@ -85,7 +83,7 @@ function FilterOwner(props) {
           item.ownerName,
           item.ownerEmail,
           item.productName,
-          format(new Date(parseInt(item.warrantyExp)), "MM/dd/yyyy"),
+          format(new Date(item.warrantyExp), "MM/dd/yyyy"),
           item.origin,
         ]);
       }
@@ -94,12 +92,10 @@ function FilterOwner(props) {
 
   return (
     <div style={{ height: "568px" }}>
-      {" "}
-      {/* <CSVLink data={csvData}>
+      <CSVLink data={csvData}>
         <Button>Download CSV</Button>
-      </CSVLink> */}
+      </CSVLink>
       <Card>
-        {" "}
         <Card.Section>
           <Filters
             queryValue={queryValue}

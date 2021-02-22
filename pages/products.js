@@ -8,11 +8,11 @@ import {
   Button,
   Form,
   FormLayout,
+  DataTable,
 } from "@shopify/polaris";
 import fetchClass from "../service/fetchClass-service";
 
 function Products(props) {
-  console.log(props);
   const [products, setProducts] = useState([]);
   const [selected, setSelected] = useState();
   const [warranty, setWarranty] = useState("");
@@ -91,6 +91,15 @@ function Products(props) {
           </FormLayout>
         </Form>
       </Card>
+      <Card>
+        <DataTable
+          columnContentTypes={["text", "text", "text"]}
+          headings={["Product ID", "Title", "Warranty Duration"]}
+          rows={products.map((item) => {
+            return [item.productId, item.productName, item.warrantyDuration];
+          })}
+        />
+      </Card>
     </Page>
   );
 }
@@ -107,8 +116,6 @@ export const getStaticProps = async () => {
     }),
   });
   const response = await res.json();
-  console.log(response);
-  // console.log(response.data.allProducts);
   return { props: { results: response.data.allProducts } };
 };
 

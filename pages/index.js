@@ -18,8 +18,8 @@ function Index(props) {
       const i = item?.map((i) => {
         return [
           i.productName,
-          format(new Date(parseInt(i.warrantyStart)), "MM/dd/yyyy"),
-          format(new Date(parseInt(i.warrantyExp)), "MM/dd/yyyy"),
+          format(new Date(i.warrantyStart), "MM/dd/yyyy"),
+          format(new Date(i.warrantyExp), "MM/dd/yyyy"),
           i.origin === "shopify" ? "Shopify" : i.origin,
         ];
       });
@@ -54,11 +54,11 @@ export const getStaticProps = async () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      query: `query {allWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin}}`,
+      query: `query {approvedWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin}}`,
     }),
   });
   const response = await res.json();
-  return { props: { results: response.data.allWarranties } };
+  return { props: { results: response.data.approvedWarranties } };
 };
 
 export default Index;

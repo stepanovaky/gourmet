@@ -11,7 +11,7 @@ class fetchClass {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        query: `mutation {addWarrantyToProduct(productId:${id},warrantyDuration:${parseInt(
+        query: `mutation {addWarrantyToProduct(productId: "${id}", warrantyDuration: ${parseInt(
           warranty
         )} ){
                 productId

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, DataTable, Page } from "@shopify/polaris";
 import { Button, ButtonGroup } from "@shopify/polaris";
 import { format } from "date-fns";
@@ -6,36 +6,8 @@ import { format } from "date-fns";
 //table logic - if approval === pending, include in this table
 
 function AmazonWarranties(props) {
-  console.log(props, "test1");
   const [tableRows, setTableRows] = useState([]);
-
-  const handleApprove = async (exp, id) => {
-    //send code to approve this warraNTY
-    const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `mutation {addWarrantyApproval (productId: ${id}, warrantyExp: ${exp}){ productId }}`,
-      }),
-    });
-    console.log(res);
-  };
-
-  const handleRemove = async (exp, id) => {
-    //send code to delete this warranty
-     const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `mutation {warrantyDenied (productId: ${id}, warrantyExp: ${exp}){ productId }}`,
-    }),
-  });
-  console.log(res)
-  };
+  const stateRef = useRef();
 
   const filterOutApproved = (items) => {
     let filteredItems = [];
@@ -50,13 +22,17 @@ function AmazonWarranties(props) {
           <ButtonGroup>
             <Button
               destructive
-              onClick={() => handleRemove(item.warrantyExp, item.productId)}
+              onClick={() =>
+                handleRemove(item.ownerEmail, item.productId, item.productName)
+              }
             >
               Remove
             </Button>
             <Button
               primary
-              onClick={() => handleApprove(item.warrantyExp, item.productId)}
+              onClick={() =>
+                handleApprove(item.ownerEmail, item.productId, item.productName)
+              }
             >
               Approve
             </Button>
@@ -64,39 +40,60 @@ function AmazonWarranties(props) {
         ]);
       }
     });
-    const filtered = filteredItems;
-    setTableRows(filtered);
+    setTableRows(filteredItems);
+    stateRef.current = filteredItems;
   };
 
   useEffect(() => {
     filterOutApproved(props.results);
   }, []);
 
-  // let rows = tableRows?.map((item) => {
-  //   if (item !== undefined) {
-  //     return [
-  //       item.ownerName,
-  //       item.ownerEmail,
-  //       item.productName,
-  //       //   format(new Date(parseInt(item?.warrantyExp)), "MM/dd/yyyy"),
-  //       item.amazonOrderId,
-  //       <ButtonGroup>
-  //         <Button
-  //           destructive
-  //           onClick={handleRemove(item.warrantyExp, item.productId)}
-  //         >
-  //           Remove
-  //         </Button>
-  //         <Button
-  //           primary
-  //           onClick={handleApprove(item.warrantyExp, item.productId)}
-  //         >
-  //           Approve
-  //         </Button>
-  //       </ButtonGroup>,
-  //     ];
-  //   }
-  // });
+  const handleApprove = async (email, id, name) => {
+    //send code to approve this warraNTY
+    const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `mutation {addWarrantyApproval (productId: "${id}", ownerEmail: "${email}"){ productId }}`,
+      }),
+    });
+    const response = await res.json();
+    if (response.data) {
+      let rows = stateRef.current.filter((item) => {
+        if (item[2] !== name || item[1] !== email) {
+          return item;
+        }
+      });
+      setTableRows(rows);
+      stateRef.current = rows;
+    }
+  };
+
+  const handleRemove = async (email, id, name) => {
+    //send code to delete this warranty
+    const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `mutation {warrantyDenied (productId: "${id}", ownerEmail: "${email}"){ productId }}`,
+      }),
+    });
+    const response = await res.json();
+    if (response.data) {
+      let rows = stateRef.current.filter((item) => {
+        if (item[2] !== name || item[1] !== email) {
+          return item;
+        }
+      });
+      setTableRows(rows);
+      stateRef.current = rows;
+      //staqlab-tunnel 8081
+    }
+  };
 
   return (
     <Page title="Unapproved Amazon Warranties">
@@ -110,7 +107,7 @@ function AmazonWarranties(props) {
             "Amazon Order ID",
             "Approve?",
           ]}
-          rows={tableRows ? tableRows : []}
+          rows={tableRows}
         />
       </Card>
     </Page>
@@ -120,7 +117,6 @@ function AmazonWarranties(props) {
 export default AmazonWarranties;
 
 export const getStaticProps = async () => {
-  console.log("request sent");
   const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
     method: "POST",
     headers: {
