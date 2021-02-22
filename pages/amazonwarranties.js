@@ -125,6 +125,8 @@ export const getStaticProps = async () => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "cache-control": "no-cache",
+      "pragma": "no-cache"
     },
     body: JSON.stringify({
       query: `query {allWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin amazonOrderId}}`,
