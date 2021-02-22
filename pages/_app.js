@@ -26,6 +26,16 @@ const client = new ApolloClient({
   fetchOptions: {
     credentials: "include",
   },
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "no-cache",
+      errorPolicy: "ignore",
+    },
+    query: {
+      fetchPolicy: "no-cache",
+      errorPolicy: "all",
+    },
+  },
 });
 class MyApp extends App {
   constructor(props) {
