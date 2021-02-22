@@ -1,18 +1,32 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Card, DataTable, Page } from "@shopify/polaris";
 import { Button, ButtonGroup } from "@shopify/polaris";
 import { format } from "date-fns";
 
 //table logic - if approval === pending, include in this table
 
-function AmazonWarranties(props) {
+function AmazonWarranties() {
   const [tableRows, setTableRows] = useState([]);
-  const stateRef = useRef();
+
+  const fetchData = async () => {
+    const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "cache-control": "no-cache",
+        pragma: "no-cache",
+      },
+      body: JSON.stringify({
+        query: `query {allWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin amazonOrderId}}`,
+      }),
+    });
+    const response = await res.json();
+    return { props: { results: response.data.allWarranties } };
+  };
 
   const filterOutApproved = (items) => {
     let filteredItems = [];
     items.map((item) => {
-      console.log(item, "test1");
       if (item.approval === "pending") {
         filteredItems.push([
           item.ownerName,
@@ -42,11 +56,11 @@ function AmazonWarranties(props) {
       }
     });
     setTableRows(filteredItems);
-    stateRef.current = filteredItems;
   };
 
-  useEffect(() => {
-    filterOutApproved(props.results);
+  useEffect(async () => {
+    const data = await fetchData();
+    filterOutApproved(data.results);
   }, []);
 
   const handleApprove = async (email, id, name) => {
@@ -62,13 +76,8 @@ function AmazonWarranties(props) {
     });
     const response = await res.json();
     if (response.data) {
-      let rows = stateRef.current.filter((item) => {
-        if (item[2] !== name || item[1] !== email) {
-          return item;
-        }
-      });
-      setTableRows(rows);
-      stateRef.current = rows;
+      const data = await fetchData();
+      filterOutApproved(data.results);
     }
   };
 
@@ -85,16 +94,8 @@ function AmazonWarranties(props) {
     });
     const response = await res.json();
     if (response.data) {
-      let rows = stateRef.current.filter((item) => {
-        console.log(item, "test2");
-        if (item[2] !== name || item[1] !== email) {
-          return item;
-        }
-      });
-      setTableRows(rows);
-      console.log(stateRef.current, "test3");
-      stateRef.current = rows;
-      console.log(stateRef.current, "test4");
+      const data = await fetchData();
+      filterOutApproved(data.results);
       //staqlab-tunnel 8081
     }
   };
@@ -119,19 +120,3 @@ function AmazonWarranties(props) {
 }
 
 export default AmazonWarranties;
-
-export const getStaticProps = async () => {
-  const res = await fetch(`https://gourmet-b.herokuapp.com/graphql`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "cache-control": "no-cache",
-      "pragma": "no-cache"
-    },
-    body: JSON.stringify({
-      query: `query {allWarranties{approval productId productName warrantyExp warrantyStart ownerEmail ownerName origin amazonOrderId}}`,
-    }),
-  });
-  const response = await res.json();
-  return { props: { results: response.data.allWarranties } };
-};
