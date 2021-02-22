@@ -12,6 +12,7 @@ function AmazonWarranties(props) {
   const filterOutApproved = (items) => {
     let filteredItems = [];
     items.map((item) => {
+      console.log(item, "test1");
       if (item.approval === "pending") {
         filteredItems.push([
           item.ownerName,
@@ -85,12 +86,15 @@ function AmazonWarranties(props) {
     const response = await res.json();
     if (response.data) {
       let rows = stateRef.current.filter((item) => {
+        console.log(item, "test2");
         if (item[2] !== name || item[1] !== email) {
           return item;
         }
       });
       setTableRows(rows);
+      console.log(stateRef.current, "test3");
       stateRef.current = rows;
+      console.log(stateRef.current, "test4");
       //staqlab-tunnel 8081
     }
   };
